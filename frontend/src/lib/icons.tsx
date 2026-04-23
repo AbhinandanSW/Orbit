@@ -1,10 +1,15 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, MouseEventHandler, ReactNode } from "react";
 
-type IP = { size?: number; stroke?: number; style?: CSSProperties };
+type IP = {
+  size?: number;
+  stroke?: number;
+  style?: CSSProperties;
+  onClick?: MouseEventHandler<SVGSVGElement>;
+};
 
-const IconBase = ({ children, size = 18, stroke = 1.6, style }: IP & { children: ReactNode }) => (
+const IconBase = ({ children, size = 18, stroke = 1.6, style, onClick }: IP & { children: ReactNode }) => (
   <svg width={size} height={size} viewBox="0 0 20 20" fill="none" stroke="currentColor"
-    strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" style={style}>
+    strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" style={style} onClick={onClick}>
     {children}
   </svg>
 );

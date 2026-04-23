@@ -71,3 +71,13 @@ export default defineConfig([
   },
 ])
 ```
+
+
+Run Project in Docker
+
+```
+docker build -t orbit .
+docker run -d --name orbit -p 8000:8000 -e ANTHROPIC_API_KEY=sk-ant-... orbit
+docker exec orbit python -m app.seed   # one-time, creates demo user + goals
+open http://localhost:8000
+```

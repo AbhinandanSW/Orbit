@@ -1,0 +1,17 @@
+**/node_modules
+**/venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+backend/.env
+backend/orbit.db
+backend/data
+frontend/dist
+frontend/.vite
+.git
+.github
+.claude
+.vscode
+.idea
+*.log
+.DS_Store
