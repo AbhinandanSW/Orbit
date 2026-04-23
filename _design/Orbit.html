@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Orbit — AI-first Social Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; font-family: -apple-system, BlinkMacSystemFont, "Geist", sans-serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<template id="__bundler_thumbnail" data-bg-color="#0E0E10">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0E0E10"/>
+    <circle cx="600" cy="400" r="170" fill="none" stroke="#FF5A1F" stroke-width="18"/>
+    <circle cx="600" cy="400" r="36" fill="#D4FF3A"/>
+    <text x="600" y="660" text-anchor="middle" font-family="Instrument Serif, serif" font-style="italic" font-size="88" fill="#F6F2EA">Orbit</text>
+  </svg>
+</template>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="lib/icons.jsx"></script>
+<script type="text/babel" src="lib/shared.jsx"></script>
+<script type="text/babel" src="screens/login.jsx"></script>
+<script type="text/babel" src="screens/verify.jsx"></script>
+<script type="text/babel" src="screens/autopilot.jsx"></script>
+<script type="text/babel" src="screens/goals.jsx"></script>
+<script type="text/babel" src="screens/assistant.jsx"></script>
+<script type="text/babel" src="screens/dna.jsx"></script>
+<script type="text/babel" src="screens/automations.jsx"></script>
+<script type="text/babel" src="screens/predict.jsx"></script>
+<script type="text/babel" src="screens/dashboard.jsx"></script>
+<script type="text/babel" src="screens/performance.jsx"></script>
+<script type="text/babel" src="screens/composer.jsx"></script>
+<script type="text/babel" src="screens/library.jsx"></script>
+<script type="text/babel" src="screens/calendar.jsx"></script>
+<script type="text/babel" src="screens/settings.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "scheme": "coral"
+}/*EDITMODE-END*/;
+
+const SCHEMES = {
+  coral:     { name: 'Coral',     primary: '#FF5A1F', primary2: '#FF7A46', accent: '#D4FF3A', glow: '255,90,31' },
+  electric:  { name: 'Electric',  primary: '#6B5CFF', primary2: '#8A7EFF', accent: '#D4FF3A', glow: '107,92,255' },
+  acid:      { name: 'Acid',      primary: '#D4FF3A', primary2: '#E3FF66', accent: '#FF5A1F', glow: '212,255,58' },
+  rose:      { name: 'Rose',      primary: '#FF4D8F', primary2: '#FF72A8', accent: '#D4FF3A', glow: '255,77,143' },
+  ocean:     { name: 'Ocean',     primary: '#5AC8FF', primary2: '#7FD7FF', accent: '#D4FF3A', glow: '90,200,255' },
+  mono:      { name: 'Mono',      primary: '#F6F2EA', primary2: '#FFFFFF', accent: '#F6F2EA', glow: '246,242,234' },
+};
+
+function applyScheme(key) {
+  const s = SCHEMES[key] || SCHEMES.coral;
+  const r = document.documentElement;
+  r.style.setProperty('--coral', s.primary);
+  r.style.setProperty('--coral-2', s.primary2);
+  r.style.setProperty('--lime', s.accent);
+  r.style.setProperty('--coral-glow', s.glow);
+  // Override hard-coded rgba references via extra style tag
+  let styleEl = document.getElementById('scheme-overrides');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'scheme-overrides';
+    document.head.appendChild(styleEl);
+  }
+  const accentRgb = s.accent === '#D4FF3A' ? '212,255,58' : s.accent === '#FF5A1F' ? '255,90,31' : '246,242,234';
+  styleEl.textContent = `
+    .orbit .chip.coral { background: rgba(${s.glow},0.12) !important; border-color: rgba(${s.glow},0.3) !important; color: ${s.primary2} !important; }
+    .orbit .chip.lime { background: rgba(${accentRgb},0.12) !important; border-color: rgba(${accentRgb},0.3) !important; color: ${s.accent} !important; }
+    .orbit .btn.primary { box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 6px 24px rgba(${s.glow},0.3) !important; }
+  `;
+}
+
+function TweakPanel({ visible, scheme, onScheme }) {
+  if (!visible) return null;
+  return (
+    <div style={{
+      position: 'fixed', bottom: 20, right: 20, width: 280,
+      background: '#141418', border: '1px solid rgba(255,255,255,0.1)',
+      borderRadius: 14, padding: 18, zIndex: 9999,
+      fontFamily: 'Geist, sans-serif', color: '#F6F2EA',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+    }}>
+      <div style={{ fontSize: 11, letterSpacing: 1.4, textTransform: 'uppercase', color: 'rgba(246,242,234,0.56)', marginBottom: 4 }}>Tweaks</div>
+      <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 14 }}>Accent color</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+        {Object.entries(SCHEMES).map(([k, v]) => {
+          const sel = k === scheme;
+          return (
+            <button key={k} onClick={() => onScheme(k)} style={{
+              padding: '10px 8px', borderRadius: 9, cursor: 'pointer',
+              border: '1px solid ' + (sel ? v.primary : 'rgba(255,255,255,0.08)'),
+              background: sel ? 'rgba(255,255,255,0.05)' : 'transparent',
+              color: '#F6F2EA', fontFamily: 'inherit', fontSize: 11.5,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+            }}>
+              <div style={{ display: 'flex', gap: 3 }}>
+                <div style={{ width: 14, height: 14, borderRadius: 4, background: v.primary }}/>
+                <div style={{ width: 14, height: 14, borderRadius: 4, background: v.accent }}/>
+              </div>
+              {v.name}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [tweaksOn, setTweaksOn] = React.useState(false);
+  const [scheme, setScheme] = React.useState(TWEAK_DEFAULTS.scheme);
+
+  React.useEffect(() => { applyScheme(scheme); }, [scheme]);
+
+  React.useEffect(() => {
+    function onMsg(e) {
+      const d = e.data || {};
+      if (d.type === '__activate_edit_mode') setTweaksOn(true);
+      if (d.type === '__deactivate_edit_mode') setTweaksOn(false);
+    }
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const setSchemeAndPersist = (k) => {
+    setScheme(k);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { scheme: k } }, '*');
+  };
+
+  return (
+    <>
+    <TweakPanel visible={tweaksOn} scheme={scheme} onScheme={setSchemeAndPersist} />
+    <DesignCanvas>
+      <DCSection id="onboarding" title="Onboarding" subtitle="Gmail login → verify social accounts">
+        <DCArtboard id="login" label="01 · Login" width={1440} height={900}>
+          <LoginScreen />
+        </DCArtboard>
+        <DCArtboard id="verify" label="02 · Connect accounts" width={1440} height={900}>
+          <VerifyScreen />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="ai-core" title="AI core" subtitle="The autonomous agent — what it's doing, what it's learning, where it's heading">
+        <DCArtboard id="autopilot" label="03 · Autopilot" width={1440} height={900}>
+          <AutopilotScreen />
+        </DCArtboard>
+        <DCArtboard id="goals" label="04 · Goals & strategy" width={1440} height={900}>
+          <GoalsScreen />
+        </DCArtboard>
+        <DCArtboard id="assistant" label="05 · Ask Orbit" width={1440} height={900}>
+          <AssistantScreen />
+        </DCArtboard>
+        <DCArtboard id="dna" label="06 · Content DNA" width={1440} height={900}>
+          <DNAScreen />
+        </DCArtboard>
+        <DCArtboard id="automations" label="07 · Automations" width={1440} height={900}>
+          <AutomationsScreen />
+        </DCArtboard>
+        <DCArtboard id="predict" label="08 · Forecast" width={1440} height={900}>
+          <PredictScreen />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="main" title="Daily driver" subtitle="Manual + visibility screens">
+        <DCArtboard id="dashboard" label="09 · Dashboard" width={1440} height={900}>
+          <DashboardScreen />
+        </DCArtboard>
+        <DCArtboard id="performance" label="10 · Performance" width={1440} height={900}>
+          <PerformanceScreen />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="creation" title="Create & schedule" subtitle="Composer, library, calendar + events">
+        <DCArtboard id="composer" label="11 · Composer" width={1440} height={900}>
+          <ComposerScreen />
+        </DCArtboard>
+        <DCArtboard id="library" label="12 · Library" width={1440} height={900}>
+          <LibraryScreen />
+        </DCArtboard>
+        <DCArtboard id="calendar" label="13 · Calendar & events" width={1440} height={900}>
+          <CalendarScreen />
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="workspace" title="Workspace" subtitle="Settings for agency managers">
+        <DCArtboard id="settings" label="14 · Settings" width={1440} height={900}>
+          <SettingsScreen />
+        </DCArtboard>
+      </DCSection>
+
+      <DCPostIt top={160} left={60} rotate={-3} width={220}>
+        Orbit — an AI-first autonomous growth engine. The top row is the agent; everything below is the manual surface for when you want the wheel.
+      </DCPostIt>
+    </DesignCanvas>
+    </>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

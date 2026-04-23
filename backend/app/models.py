@@ -1,0 +1,67 @@
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON, Float, Boolean
+from sqlalchemy.orm import relationship
+from .db import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+    name = Column(String, nullable=False)
+    role = Column(String, default="Social lead")
+    verified = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    brands = relationship("Brand", back_populates="user", cascade="all, delete-orphan")
+
+
+class Brand(Base):
+    __tablename__ = "brands"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    name = Column(String, nullable=False)
+    color = Column(String, nullable=False)
+    initials = Column(String, nullable=False)
+    user = relationship("User", back_populates="brands")
+    posts = relationship("Post", back_populates="brand", cascade="all, delete-orphan")
+    connections = relationship("Connection", back_populates="brand", cascade="all, delete-orphan")
+
+
+class Connection(Base):
+    __tablename__ = "connections"
+    id = Column(Integer, primary_key=True)
+    brand_id = Column(Integer, ForeignKey("brands.id", ondelete="CASCADE"))
+    platform = Column(String, nullable=False)  # instagram|facebook|linkedin|youtube|threads
+    handle = Column(String, nullable=False)
+    connected_at = Column(DateTime, default=datetime.utcnow)
+    access_token_mock = Column(String, default="mock-token")
+    brand = relationship("Brand", back_populates="connections")
+
+
+class Post(Base):
+    __tablename__ = "posts"
+    id = Column(Integer, primary_key=True)
+    brand_id = Column(Integer, ForeignKey("brands.id", ondelete="CASCADE"))
+    caption = Column(String, default="")
+    platforms = Column(JSON, default=list)
+    media_urls = Column(JSON, default=list)
+    scheduled_at = Column(DateTime, nullable=True)
+    published_at = Column(DateTime, nullable=True)
+    status = Column(String, default="draft")  # draft|scheduled|published|failed|review
+    engagement = Column(Float, default=0.0)
+    reach = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    brand = relationship("Brand", back_populates="posts")
+
+
+class MetricSample(Base):
+    __tablename__ = "metric_samples"
+    id = Column(Integer, primary_key=True)
+    brand_id = Column(Integer, ForeignKey("brands.id", ondelete="CASCADE"), index=True)
+    platform = Column(String, index=True)
+    timestamp = Column(DateTime, index=True)
+    reach = Column(Integer, default=0)
+    engagement_rate = Column(Float, default=0.0)
+    saves = Column(Integer, default=0)
+    clicks = Column(Integer, default=0)
