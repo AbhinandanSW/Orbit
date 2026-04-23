@@ -65,3 +65,17 @@ class MetricSample(Base):
     engagement_rate = Column(Float, default=0.0)
     saves = Column(Integer, default=0)
     clicks = Column(Integer, default=0)
+
+
+class Goal(Base):
+    __tablename__ = "goals"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    brand_id = Column(Integer, ForeignKey("brands.id", ondelete="CASCADE"), nullable=True, index=True)
+    platform = Column(String, nullable=True)  # None = all platforms
+    metric = Column(String, nullable=False)  # reach|engagement_rate|posts_published|saves|clicks
+    target_value = Column(Float, nullable=False)
+    title = Column(String, nullable=False)
+    period_start = Column(DateTime, nullable=False)
+    period_end = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)

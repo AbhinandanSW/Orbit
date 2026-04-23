@@ -89,8 +89,24 @@ def run():
         for p in ["instagram", "linkedin"]:
             db.add(models.Connection(brand_id=brands[0].id, platform=p, handle="@lumastudio"))
 
+        # Seed a handful of realistic goals
+        period_start = now - timedelta(days=20)
+        period_end = now + timedelta(days=10)
+        demo_goals = [
+            ("Hit 500k Instagram reach this month", brands[0].id, "instagram", "reach", 500000.0),
+            ("Grow engagement rate past 4.5%", brands[1].id, None, "engagement_rate", 4.5),
+            ("Ship 24 posts across all brands", None, None, "posts_published", 24.0),
+            ("5k saves on Luma this sprint", brands[0].id, None, "saves", 5000.0),
+        ]
+        for title, bid, plat, metric, target in demo_goals:
+            db.add(models.Goal(
+                user_id=user.id, title=title, brand_id=bid, platform=plat,
+                metric=metric, target_value=target,
+                period_start=period_start, period_end=period_end,
+            ))
+
         db.commit()
-        print(f"Seeded user demo@orbit.app / demo1234 with {len(brands)} brands")
+        print(f"Seeded user demo@orbit.app / demo1234 with {len(brands)} brands and {len(demo_goals)} goals")
     finally:
         db.close()
 

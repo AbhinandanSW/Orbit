@@ -90,3 +90,53 @@ class ConnectionOut(BaseModel):
     handle: str
     connected_at: datetime
     class Config: from_attributes = True
+
+
+class GoalIn(BaseModel):
+    title: str
+    metric: str  # reach|engagement_rate|posts_published|saves|clicks
+    target_value: float
+    period_start: datetime
+    period_end: datetime
+    brand_id: Optional[int] = None
+    platform: Optional[str] = None
+
+
+class GoalPatch(BaseModel):
+    title: Optional[str] = None
+    metric: Optional[str] = None
+    target_value: Optional[float] = None
+    period_start: Optional[datetime] = None
+    period_end: Optional[datetime] = None
+    brand_id: Optional[int] = None
+    platform: Optional[str] = None
+
+
+class GoalOut(BaseModel):
+    id: int
+    user_id: int
+    title: str
+    metric: str
+    target_value: float
+    period_start: datetime
+    period_end: datetime
+    brand_id: Optional[int]
+    platform: Optional[str]
+    created_at: datetime
+    class Config: from_attributes = True
+
+
+class ChatMessageIn(BaseModel):
+    role: str  # "user" | "assistant"
+    content: str
+
+
+class ChatIn(BaseModel):
+    messages: list[ChatMessageIn]
+
+
+class CaptionIn(BaseModel):
+    brand_id: int
+    platform: str
+    topic: str
+    tone: Optional[str] = None

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from jose import jwt, JWTError
