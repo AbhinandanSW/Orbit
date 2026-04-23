@@ -37,7 +37,7 @@ export default function Verify() {
         </p>
         <form onSubmit={submit} style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
           <input autoFocus value={code} onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="000000" className="mono" style={{
-            padding: "18px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid var(--line)",
+            padding: "18px 14px", background: "rgba(20,20,26,0.04)", border: "1px solid var(--line)",
             borderRadius: 10, color: "var(--fg)", fontSize: 24, letterSpacing: 12, textAlign: "center", outline: "none",
           }} />
           {err && <div style={{ fontSize: 12.5, color: "#FF7A7A" }}>{err}</div>}

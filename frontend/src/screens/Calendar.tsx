@@ -63,7 +63,7 @@ export default function Calendar() {
             const isToday = key === todayKey;
             return (
               <div key={i} style={{
-                background: d ? "var(--ink-2)" : "rgba(255,255,255,0.01)",
+                background: d ? "var(--ink-2)" : "rgba(20,20,26,0.02)",
                 minHeight: 120, padding: 10, position: "relative",
                 outline: isToday ? "1px solid var(--coral)" : undefined,
               }}>
@@ -77,7 +77,7 @@ export default function Calendar() {
                         return (
                           <div key={p.id} onClick={() => nav("/library")} style={{
                             fontSize: 11, padding: "4px 6px", borderRadius: 6, cursor: "pointer",
-                            background: "rgba(255,255,255,0.04)",
+                            background: "rgba(20,20,26,0.04)",
                             borderLeft: `2px solid ${mainPlat ? PlatformBg[mainPlat] : "var(--coral)"}`,
                             overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                             display: "flex", alignItems: "center", gap: 4,

@@ -35,7 +35,7 @@ export function Sidebar({ compact = false }: { compact?: boolean }) {
   return (
     <aside style={{
       width: compact ? 72 : 240, flexShrink: 0,
-      background: "#0A0A0C",
+      background: "#F3F1EA",
       borderRight: "1px solid var(--line)",
       display: "flex", flexDirection: "column",
       padding: "20px 14px",
@@ -50,7 +50,7 @@ export function Sidebar({ compact = false }: { compact?: boolean }) {
       {!compact && (
         <div style={{ padding: "10px 10px 14px" }}>
           <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 1.2, color: "var(--muted-2)", marginBottom: 8 }}>Workspace</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", background: "rgba(255,255,255,0.04)", border: "1px solid var(--line)", borderRadius: 10, cursor: "pointer" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", background: "rgba(20,20,26,0.04)", border: "1px solid var(--line)", borderRadius: 10, cursor: "pointer" }}>
             <div className="av" style={{ width: 24, height: 24, borderRadius: 6, background: brand.color, fontSize: 10 }}>{brand.initials}</div>
             <div style={{ fontSize: 13, fontWeight: 500 }}>{brand.name}</div>
             <Icon.ChevronDown size={14} style={{ marginLeft: "auto", opacity: 0.5 }} />
@@ -65,7 +65,7 @@ export function Sidebar({ compact = false }: { compact?: boolean }) {
             <div key={it.id} onClick={() => nav(it.path)} style={{
               display: "flex", alignItems: "center", gap: 12,
               padding: compact ? "10px" : "9px 12px", borderRadius: 10,
-              background: isActive ? "rgba(255,255,255,0.06)" : "transparent",
+              background: isActive ? "rgba(20,20,26,0.06)" : "transparent",
               color: isActive ? "var(--fg)" : "var(--fg-dim)",
               fontSize: 13.5, fontWeight: isActive ? 500 : 400,
               cursor: "pointer",
@@ -74,7 +74,7 @@ export function Sidebar({ compact = false }: { compact?: boolean }) {
             }}>
               <it.icon size={17} />
               {!compact && <span>{it.label}</span>}
-              {!compact && it.badge && <span style={{ marginLeft: "auto", fontSize: 10, background: "var(--lime)", color: "#0E0E10", padding: "1px 6px", borderRadius: 10, fontWeight: 600, letterSpacing: 0.5 }}>{it.badge}</span>}
+              {!compact && it.badge && <span style={{ marginLeft: "auto", fontSize: 10, background: "var(--lime)", color: "#14141A", padding: "1px 6px", borderRadius: 10, fontWeight: 600, letterSpacing: 0.5 }}>{it.badge}</span>}
               {isActive && <div style={{ position: "absolute", left: -14, top: 10, bottom: 10, width: 2, background: "var(--coral)", borderRadius: 2 }} />}
             </div>
           );

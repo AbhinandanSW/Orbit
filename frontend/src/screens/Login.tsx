@@ -32,7 +32,7 @@ export default function Login() {
 
   return (
     <div className="orbit" style={{ minHeight: "100vh", display: "flex", overflow: "hidden", position: "relative" }}>
-      <div style={{ flex: "1 1 720px", padding: "56px 64px", background: "linear-gradient(135deg, #0E0E10 0%, #1A1A1E 100%)", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+      <div style={{ flex: "1 1 720px", padding: "56px 64px", background: "linear-gradient(135deg, #F3F1EA 0%, #FFFFFF 100%)", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: "var(--coral)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontFamily: "Instrument Serif, serif", fontStyle: "italic", fontSize: 18 }}>O</div>
           <div style={{ fontWeight: 600, letterSpacing: -0.3, fontSize: 17 }}>Orbit</div>
@@ -61,7 +61,7 @@ export default function Login() {
         </div>
 
         <div style={{ position: "absolute", top: 140, right: -40, transform: "rotate(8deg)" }}>
-          <div style={{ background: "var(--ink-2)", border: "1px solid var(--line)", borderRadius: 14, padding: 14, width: 260, boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}>
+          <div style={{ background: "var(--ink-2)", border: "1px solid var(--line)", borderRadius: 14, padding: 14, width: 260, boxShadow: "0 20px 40px rgba(20,20,26,0.12)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: "var(--muted)" }}>
               <div style={{ width: 18, height: 18, borderRadius: 4, background: PlatformBg.instagram, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}><Platform.instagram size={11} /></div>
               Instagram · scheduled
@@ -70,7 +70,7 @@ export default function Login() {
           </div>
         </div>
         <div style={{ position: "absolute", bottom: 120, right: 60, transform: "rotate(-6deg)" }}>
-          <div style={{ background: "var(--ink-2)", border: "1px solid var(--line)", borderRadius: 14, padding: 12, width: 220, boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}>
+          <div style={{ background: "var(--ink-2)", border: "1px solid var(--line)", borderRadius: 14, padding: 12, width: 220, boxShadow: "0 20px 40px rgba(20,20,26,0.12)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 10.5, color: "var(--lime)", textTransform: "uppercase", letterSpacing: 1 }}>
               <Icon.ArrowUpRight size={12} /> +48% eng. week
             </div>
@@ -133,7 +133,7 @@ function Field({ label, value, onChange, type = "text", placeholder }: { label: 
     <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       <span style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: 1.1 }}>{label}</span>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={{
-        padding: "12px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid var(--line)",
+        padding: "12px 14px", background: "rgba(20,20,26,0.04)", border: "1px solid var(--line)",
         borderRadius: 10, color: "var(--fg)", fontFamily: "inherit", fontSize: 14, outline: "none",
       }} />
     </label>

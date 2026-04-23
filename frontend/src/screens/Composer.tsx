@@ -21,12 +21,33 @@ export default function Composer() {
   });
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiTone, setAiTone] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiErr, setAiErr] = useState("");
+  const [aiCaptions, setAiCaptions] = useState<string[]>([]);
 
   const defaultBrandLabel = activeBrand?.initials ?? "LS";
   const defaultBrandColor = activeBrand?.color ?? "#FF5A1F";
   const brandName = activeBrand?.name ?? "Luma Studio";
 
   const togglePlatform = (p: string) => setSelected(s => s.includes(p) ? s.filter(x => x !== p) : [...s, p]);
+
+  const genCaptions = async () => {
+    if (!activeBrand) { setAiErr("No active brand"); return; }
+    if (!aiTopic.trim()) { setAiErr("Tell Orbit what the post is about"); return; }
+    const platform = selected[0] || "instagram";
+    setAiLoading(true); setAiErr(""); setAiCaptions([]);
+    try {
+      const { data } = await api.post<{ captions: string[] }>("/ai/caption", {
+        brand_id: activeBrand.id, platform, topic: aiTopic.trim(), tone: aiTone.trim() || null,
+      });
+      setAiCaptions(data.captions);
+    } catch (e: any) {
+      setAiErr(e.response?.data?.detail ?? "Couldn't generate captions");
+    } finally { setAiLoading(false); }
+  };
 
   const scheduledAt = useMemo(() => {
     if (scheduleMode === "now") return new Date().toISOString();
@@ -98,7 +119,7 @@ export default function Composer() {
               padding: "16px 18px", fontSize: 15, lineHeight: 1.55, fontFamily: "inherit", resize: "vertical", outline: "none",
             }}/>
             <div style={{ padding: "10px 14px", borderTop: "1px solid var(--line)", display: "flex", alignItems: "center", gap: 6 }}>
-              <button className="btn ghost" style={{ padding: "6px 10px", fontSize: 12 }}><Icon.Sparkle size={13}/> AI caption</button>
+              <button className="btn ghost" style={{ padding: "6px 10px", fontSize: 12 }} onClick={() => setAiOpen(true)}><Icon.Sparkle size={13}/> AI caption</button>
               <button className="btn ghost" style={{ padding: "6px 10px", fontSize: 12 }}><Icon.Hash size={13}/> Suggest tags</button>
               <div style={{ flex: 1 }}/>
               <div className="numeral" style={{ fontSize: 11, color: "var(--muted)" }}>{caption.length} / 2200</div>
@@ -125,7 +146,7 @@ export default function Composer() {
           </div>
         </div>
 
-        <div style={{ padding: "28px 24px", background: "#09090B", borderRight: "1px solid var(--line)" }}>
+        <div style={{ padding: "28px 24px", background: "#F3F1EA", borderRight: "1px solid var(--line)" }}>
           <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 18 }}>Live preview</div>
           <div style={{ background: "#fff", color: "#000", borderRadius: 10, overflow: "hidden", width: 320, margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", padding: 12, gap: 10 }}>
@@ -165,7 +186,7 @@ export default function Composer() {
                     <div style={{ fontSize: 13, fontWeight: 500 }}>{o.l}</div>
                     {o.sub && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 1 }}>{o.sub}</div>}
                   </div>
-                  {sel && <div style={{ width: 14, height: 14, borderRadius: 7, background: "var(--lime)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon.Check size={9} style={{ color: "#0E0E10" }}/></div>}
+                  {sel && <div style={{ width: 14, height: 14, borderRadius: 7, background: "var(--lime)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon.Check size={9} style={{ color: "#14141A" }}/></div>}
                 </div>
               );
             })}
@@ -184,6 +205,45 @@ export default function Composer() {
           </div>
         </div>
       </div>
+
+      {aiOpen && (
+        <div onClick={() => setAiOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 30, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div onClick={e => e.stopPropagation()} className="card" style={{ width: 560, padding: 26, maxHeight: "80vh", overflow: "auto" }}>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
+              <Icon.Sparkle size={18} style={{ color: "var(--coral)" }}/>
+              <div style={{ fontSize: 17, fontWeight: 500, marginLeft: 8 }}>Draft with AI</div>
+              <div style={{ flex: 1 }}/>
+              <Icon.X size={16} onClick={() => setAiOpen(false)} style={{ cursor: "pointer", opacity: 0.6 }} />
+            </div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16, lineHeight: 1.5 }}>
+              Orbit reads your recent captions for {brandName} to stay on voice. Writing for <b style={{ color: "var(--fg-dim)" }}>{selected[0] || "instagram"}</b>.
+            </div>
+            <div style={{ fontSize: 10, color: "var(--muted)", textTransform: "uppercase", letterSpacing: 1.3, marginBottom: 6 }}>Topic</div>
+            <input autoFocus value={aiTopic} onChange={e => setAiTopic(e.target.value)} placeholder="Friday cover reveal — issue 04, the long road" style={{
+              width: "100%", padding: "10px 12px", background: "var(--ink-2)", border: "1px solid var(--line)", borderRadius: 10, color: "var(--fg)", fontFamily: "inherit", fontSize: 13, outline: "none",
+            }} />
+            <div style={{ fontSize: 10, color: "var(--muted)", textTransform: "uppercase", letterSpacing: 1.3, marginBottom: 6, marginTop: 12 }}>Tone (optional)</div>
+            <input value={aiTone} onChange={e => setAiTone(e.target.value)} placeholder="warm, quietly confident" style={{
+              width: "100%", padding: "10px 12px", background: "var(--ink-2)", border: "1px solid var(--line)", borderRadius: 10, color: "var(--fg)", fontFamily: "inherit", fontSize: 13, outline: "none",
+            }} />
+            {aiErr && <div style={{ fontSize: 12, color: "#FF8DB5", marginTop: 10 }}>{aiErr}</div>}
+            <button className="btn primary" style={{ marginTop: 16, width: "100%", justifyContent: "center" }} onClick={genCaptions} disabled={aiLoading}>
+              <Icon.Sparkle size={13}/> {aiLoading ? "Generating…" : "Generate 3 variants"}
+            </button>
+            {aiCaptions.length > 0 && (
+              <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: 1.3 }}>Pick one</div>
+                {aiCaptions.map((c, i) => (
+                  <div key={i} className="card" style={{ padding: 14, cursor: "pointer" }} onClick={() => { setCaption(c); setAiOpen(false); }}>
+                    <div style={{ fontSize: 13, lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{c}</div>
+                    <div style={{ marginTop: 8, fontSize: 11, color: "var(--coral-2)" }}>Use this caption →</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

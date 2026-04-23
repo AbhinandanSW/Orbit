@@ -10,7 +10,9 @@ import Library from "./screens/Library";
 import Calendar from "./screens/Calendar";
 import Performance from "./screens/Performance";
 import Settings from "./screens/Settings";
-import { Autopilot, Goals, Assistant, Automations, Predict, Dna } from "./screens/Stub";
+import Goals from "./screens/Goals";
+import Assistant from "./screens/Assistant";
+import { Autopilot, Automations, Predict, Dna } from "./screens/Stub";
 
 function Protected({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();

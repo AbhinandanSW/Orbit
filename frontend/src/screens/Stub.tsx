@@ -24,8 +24,6 @@ export function makeStub(title: string, sub: string, tagline: string, color: str
 }
 
 export const Autopilot = makeStub("Autopilot", "AI agent · managing your queue", "Let Orbit draft, schedule, and iterate across your brands — you steer, it rows.", "#6B5CFF");
-export const Goals = makeStub("Goals", "Track outcomes, not outputs", "Set a target for followers, engagement, or traffic — Orbit forecasts whether you'll hit it.", "#D4FF3A");
-export const Assistant = makeStub("Ask Orbit", "Your social-native assistant", "Ask questions about your data. Generate captions. Cross-brand comparisons in plain English.", "#FF5A1F");
 export const Automations = makeStub("Automations", "Rule-based workflows", "If-this-then-that across your feed — approve, escalate, re-queue, auto-reply.", "#5AC8FF");
 export const Predict = makeStub("Predict", "Forecast engagement before publish", "See expected reach and engagement for each candidate post — pick the one most likely to land.", "#FF4D8F");
 export const Dna = makeStub("Brand DNA", "Your style guide, encoded", "Tone, palette, reference posts — Orbit uses your DNA to stay on brand without you repeating yourself.", "#D4FF3A");

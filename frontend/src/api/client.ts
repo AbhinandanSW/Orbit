@@ -28,3 +28,22 @@ export type Post = {
   status: string; engagement: number; reach: number;
 };
 export type Connection = { id: number; brand_id: number; platform: string; handle: string; connected_at: string };
+
+export type GoalMetric = "reach" | "engagement_rate" | "posts_published" | "saves" | "clicks";
+export type GoalStatus = "achieved" | "on_track" | "at_risk" | "off_track";
+
+export type Goal = {
+  id: number; user_id: number; title: string; metric: GoalMetric;
+  target_value: number; period_start: string; period_end: string;
+  brand_id: number | null; platform: string | null; created_at: string;
+};
+
+export type GoalProgress = {
+  goal_id: number; current: number; target: number; percent: number;
+  forecast: number; status: GoalStatus;
+  series: { date: string; actual: number }[];
+  period_start: string; period_end: string; days_left: number;
+  goal?: { id: number; title: string; metric: GoalMetric; target_value: number; brand_id: number | null; platform: string | null; period_start: string; period_end: string };
+};
+
+export type ChatMessage = { role: "user" | "assistant"; content: string };

@@ -49,7 +49,7 @@ export default function Dashboard() {
 
       <div style={{ padding: "24px 28px 48px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr", gap: 14, marginBottom: 18 }}>
-          <div className="card" style={{ padding: 24, background: "linear-gradient(135deg, #1A1A1E 0%, #26262C 100%)", position: "relative", overflow: "hidden" }}>
+          <div className="card" style={{ padding: 24, background: "linear-gradient(135deg, #FFFFFF 0%, #F3F1EA 100%)", position: "relative", overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: 1.4 }}>
               <span style={{ width: 6, height: 6, borderRadius: 3, background: "var(--lime)", display: "inline-block" }}/> Live · last 7 days
             </div>
@@ -177,7 +177,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="card" style={{ padding: 20, background: "linear-gradient(120deg, #1A1A1E 0%, #0E0E10 100%)", borderColor: "rgba(255,90,31,0.25)" }}>
+            <div className="card" style={{ padding: 20, background: "linear-gradient(120deg, #FFFFFF 0%, #FFF3EE 100%)", borderColor: "rgba(255,90,31,0.25)" }}>
               <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", letterSpacing: 1.4 }}>Quick compose</div>
               <div className="display" style={{ fontSize: 34, lineHeight: 1.05, marginTop: 8 }}>
                 What's the <span style={{ color: "var(--coral)" }}>story</span> today?

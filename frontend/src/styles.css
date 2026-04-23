@@ -1,18 +1,18 @@
-/* Orbit — Design Tokens */
+/* Orbit — Design Tokens (Light) */
 :root {
-  /* Colors */
-  --ink: #0E0E10;
-  --ink-2: #1A1A1E;
-  --ink-3: #26262C;
-  --ink-4: #35353D;
-  --line: rgba(255,255,255,0.08);
-  --line-2: rgba(255,255,255,0.14);
-  --muted: rgba(246,242,234,0.56);
-  --muted-2: rgba(246,242,234,0.38);
-  --fg: #F6F2EA;
-  --fg-dim: #C9C3B8;
+  /* Surfaces — kept named --ink-* for backwards compat with inline styles */
+  --ink: #FAF9F5;       /* page background */
+  --ink-2: #FFFFFF;     /* card background */
+  --ink-3: #F3F1EA;     /* secondary surface (inputs, ghost chips) */
+  --ink-4: #E8E5DD;     /* stronger depth */
+  --line: rgba(20, 20, 26, 0.07);
+  --line-2: rgba(20, 20, 26, 0.14);
+  --muted: rgba(20, 20, 26, 0.56);
+  --muted-2: rgba(20, 20, 26, 0.40);
+  --fg: #14141A;        /* primary text */
+  --fg-dim: #4A4A52;
 
-  /* Brand */
+  /* Brand accents (unchanged) */
   --coral: #FF5A1F;
   --coral-2: #FF7A46;
   --violet: #6B5CFF;
@@ -27,10 +27,10 @@
   --p-threads: #000000;
   --p-linkedin: #0A66C2;
 
-  /* Surfaces (light surface variant for composer etc.) */
-  --paper: #F6F2EA;
-  --paper-2: #EBE5D8;
-  --paper-ink: #161618;
+  /* Paper variant keeps working (was already light) */
+  --paper: #FFFFFF;
+  --paper-2: #F4F1EA;
+  --paper-ink: #14141A;
 
   --radius: 14px;
   --radius-sm: 8px;
@@ -70,7 +70,7 @@
 
 /* Base scroll styling inside screens */
 .orbit ::-webkit-scrollbar { width: 6px; height: 6px; }
-.orbit ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+.orbit ::-webkit-scrollbar-thumb { background: rgba(20,20,26,0.14); border-radius: 3px; }
 .orbit ::-webkit-scrollbar-track { background: transparent; }
 
 /* Utility */
@@ -79,40 +79,41 @@
   padding: 4px 10px; border-radius: 999px;
   font-size: 12px; font-weight: 500;
   border: 1px solid var(--line);
-  background: rgba(255,255,255,0.03);
+  background: rgba(20,20,26,0.03);
   color: var(--fg-dim);
 }
 .orbit .chip .dot { width: 6px; height: 6px; border-radius: 3px; background: var(--lime); }
-.orbit .chip.coral { background: rgba(255,90,31,0.12); border-color: rgba(255,90,31,0.3); color: var(--coral-2); }
-.orbit .chip.lime { background: rgba(212,255,58,0.12); border-color: rgba(212,255,58,0.3); color: var(--lime); }
-.orbit .chip.violet { background: rgba(107,92,255,0.14); border-color: rgba(107,92,255,0.3); color: #9B8FFF; }
+.orbit .chip.coral { background: rgba(255,90,31,0.10); border-color: rgba(255,90,31,0.3); color: #C33B08; }
+.orbit .chip.lime { background: rgba(155,200,0,0.14); border-color: rgba(155,200,0,0.4); color: #6A8900; }
+.orbit .chip.violet { background: rgba(107,92,255,0.10); border-color: rgba(107,92,255,0.3); color: #5446C9; }
 
 .orbit .btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 16px; border-radius: 10px;
   border: 1px solid var(--line);
-  background: rgba(255,255,255,0.04);
+  background: rgba(20,20,26,0.03);
   color: var(--fg);
   font-family: inherit; font-size: 13px; font-weight: 500;
   cursor: pointer; transition: background .12s, border-color .12s;
 }
-.orbit .btn:hover { background: rgba(255,255,255,0.07); border-color: var(--line-2); }
+.orbit .btn:hover { background: rgba(20,20,26,0.06); border-color: var(--line-2); }
 .orbit .btn.primary {
   background: var(--coral); color: #fff;
   border-color: var(--coral);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 6px 24px rgba(255,90,31,0.3);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 20px rgba(255,90,31,0.25);
 }
 .orbit .btn.primary:hover { background: var(--coral-2); border-color: var(--coral-2); }
 .orbit .btn.lime {
-  background: var(--lime); color: #0E0E10; border-color: var(--lime);
+  background: var(--lime); color: #14141A; border-color: var(--lime);
 }
 .orbit .btn.ghost { background: transparent; border-color: transparent; }
-.orbit .btn.ghost:hover { background: rgba(255,255,255,0.05); }
+.orbit .btn.ghost:hover { background: rgba(20,20,26,0.05); }
 
 .orbit .card {
   background: var(--ink-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(20,20,26,0.03);
 }
 
 .orbit .hr {
@@ -124,7 +125,7 @@
   width: 32px; height: 32px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 600;
-  color: #0E0E10;
+  color: #fff;
 }
 
 /* Sparkline / tiny graphics don't need much */
@@ -134,11 +135,11 @@
 .orbit .icon-ring {
   width: 36px; height: 36px; border-radius: 10px;
   display: inline-flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.04);
+  background: rgba(20,20,26,0.04);
   border: 1px solid var(--line);
 }
 
-/* Paper variant (light surface) */
+/* Paper variant preserved for any .orbit.paper usage (identical to default now) */
 .orbit.paper { background: var(--paper); color: var(--paper-ink); }
 .orbit.paper .card { background: #fff; border-color: rgba(0,0,0,0.08); }
 .orbit.paper .btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: var(--paper-ink); }
@@ -146,12 +147,18 @@
 .orbit.paper .chip { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: rgba(22,22,24,0.7); }
 .orbit.paper .hr { background: rgba(0,0,0,0.08); }
 
+/* Pulsing thinking indicator */
+@keyframes pulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
 /* Grain texture optional */
 .orbit .grain::before {
   content: '';
   position: absolute; inset: 0;
   pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity: 0.5;
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
 }

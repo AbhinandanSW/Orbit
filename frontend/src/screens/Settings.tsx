@@ -54,7 +54,7 @@ export default function Settings() {
 
           <div style={{ marginTop: 16, display: "flex", gap: 10, alignItems: "center" }}>
             <input value={handle} onChange={e => setHandle(e.target.value)} placeholder="@handle or channel name" style={{
-              flex: 1, padding: "10px 14px", background: "rgba(255,255,255,0.04)", border: "1px solid var(--line)",
+              flex: 1, padding: "10px 14px", background: "rgba(20,20,26,0.04)", border: "1px solid var(--line)",
               borderRadius: 10, color: "var(--fg)", fontFamily: "inherit", fontSize: 14, outline: "none",
             }} />
             <div style={{ fontSize: 12, color: "var(--muted)" }}>then pick a platform →</div>
