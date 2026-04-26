@@ -2,6 +2,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON, Float, Boolean
 from sqlalchemy.orm import relationship
 from .db import Base
+from .security import EncryptedString
 
 
 class User(Base):
@@ -35,7 +36,15 @@ class Connection(Base):
     platform = Column(String, nullable=False)  # instagram|facebook|linkedin|youtube|threads
     handle = Column(String, nullable=False)
     connected_at = Column(DateTime, default=datetime.utcnow)
-    access_token_mock = Column(String, default="mock-token")
+
+    external_account_id = Column(String, nullable=True)
+    access_token = Column(EncryptedString(2048), nullable=True)
+    refresh_token = Column(EncryptedString(2048), nullable=True)
+    token_expires_at = Column(DateTime, nullable=True)
+    scopes = Column(String, nullable=True)
+    status = Column(String, default="active")  # active|expired|revoked|error
+    last_error = Column(String, nullable=True)
+
     brand = relationship("Brand", back_populates="connections")
 
 
@@ -51,6 +60,8 @@ class Post(Base):
     status = Column(String, default="draft")  # draft|scheduled|published|failed|review
     engagement = Column(Float, default=0.0)
     reach = Column(Integer, default=0)
+    external_ids = Column(JSON, default=dict)  # {"linkedin": "urn:li:share:..."}
+    last_error = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     brand = relationship("Brand", back_populates="posts")
 

@@ -1,7 +1,58 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, type CSSProperties, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "./icons";
 import { useAuth } from "../auth/AuthContext";
+
+export function Modal({ open, onClose, title, icon, width = 480, children, footer }: {
+  open: boolean; onClose: () => void; title?: ReactNode; icon?: ReactNode;
+  width?: number; children?: ReactNode; footer?: ReactNode;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+  if (!open) return null;
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div onClick={e => e.stopPropagation()} className="card" style={{ width, maxWidth: "92vw", maxHeight: "85vh", overflow: "auto", padding: 24 }}>
+        {(title || icon) && (
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 14 }}>
+            {icon}
+            <div style={{ fontSize: 17, fontWeight: 500, marginLeft: icon ? 8 : 0 }}>{title}</div>
+            <div style={{ flex: 1 }} />
+            <Icon.X size={16} onClick={onClose} style={{ cursor: "pointer", opacity: 0.6 }} />
+          </div>
+        )}
+        {children}
+        {footer && <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 18 }}>{footer}</div>}
+      </div>
+    </div>
+  );
+}
+
+export function ConfirmModal({ open, onClose, onConfirm, title, body, confirmLabel = "Confirm", cancelLabel = "Cancel", danger = false, busy = false }: {
+  open: boolean; onClose: () => void; onConfirm: () => void;
+  title: string; body?: ReactNode; confirmLabel?: string; cancelLabel?: string;
+  danger?: boolean; busy?: boolean;
+}) {
+  return (
+    <Modal open={open} onClose={busy ? () => {} : onClose} title={title} width={420}
+      footer={
+        <>
+          <button className="btn" onClick={onClose} disabled={busy}>{cancelLabel}</button>
+          <button className="btn primary" onClick={onConfirm} disabled={busy}
+            style={danger ? { background: "#FF5A5A", borderColor: "#FF5A5A" } : undefined}>
+            {busy ? "…" : confirmLabel}
+          </button>
+        </>
+      }
+    >
+      {body && <div style={{ fontSize: 13.5, color: "var(--fg-dim)", lineHeight: 1.55 }}>{body}</div>}
+    </Modal>
+  );
+}
 
 export type Brand = { id: number; name: string; color: string; initials: string };
 

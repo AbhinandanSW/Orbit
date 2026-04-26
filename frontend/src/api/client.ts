@@ -27,7 +27,12 @@ export type Post = {
   scheduled_at: string | null; published_at: string | null;
   status: string; engagement: number; reach: number;
 };
-export type Connection = { id: number; brand_id: number; platform: string; handle: string; connected_at: string };
+export type Connection = {
+  id: number; brand_id: number; platform: string; handle: string; connected_at: string;
+  external_account_id?: string | null;
+  token_expires_at?: string | null;
+  status?: string;
+};
 
 export type GoalMetric = "reach" | "engagement_rate" | "posts_published" | "saves" | "clicks";
 export type GoalStatus = "achieved" | "on_track" | "at_risk" | "off_track";

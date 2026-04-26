@@ -13,6 +13,7 @@ import Settings from "./screens/Settings";
 import Goals from "./screens/Goals";
 import Assistant from "./screens/Assistant";
 import { Autopilot, Automations, Predict, Dna } from "./screens/Stub";
+import { Privacy, Terms, DataDeletion } from "./screens/Legal";
 
 function Protected({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
@@ -28,6 +29,9 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/verify" element={<Verify />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/data-deletion" element={<DataDeletion />} />
           <Route path="/" element={<Protected><Dashboard /></Protected>} />
           <Route path="/compose" element={<Protected><Composer /></Protected>} />
           <Route path="/library" element={<Protected><Library /></Protected>} />

@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..db import get_db
 from ..deps import get_current_user
+from ..scheduler import _publish_one
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
@@ -57,6 +58,21 @@ def patch_post(post_id: int, data: schemas.PostPatch, user: models.User = Depend
         setattr(post, k, v)
     db.commit()
     db.refresh(post)
+    return post
+
+
+@router.post("/{post_id}/publish", response_model=schemas.PostOut)
+def publish_now(post_id: int, user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    post = db.get(models.Post, post_id)
+    if not post or post.brand_id not in _owned_brand_ids(user):
+        raise HTTPException(404, "Not found")
+    if post.status == "published":
+        return post
+    _publish_one(db, post)
+    db.commit()
+    db.refresh(post)
+    if post.status == "failed":
+        raise HTTPException(502, post.last_error or "publish failed")
     return post
 
 

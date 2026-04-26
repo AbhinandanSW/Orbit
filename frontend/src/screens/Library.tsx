@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TopBar, Placeholder } from "../lib/shared";
+import { TopBar, Placeholder, ConfirmModal } from "../lib/shared";
 import { Icon, Platform, PlatformBg } from "../lib/icons";
 import { api, type Post } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
@@ -23,6 +23,8 @@ export default function Library() {
   const { activeBrand } = useAuth();
   const [tab, setTab] = useState("");
   const [posts, setPosts] = useState<Post[]>([]);
+  const [pendingDelete, setPendingDelete] = useState<Post | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -32,10 +34,16 @@ export default function Library() {
     api.get<Post[]>(`/posts?${params}`).then(r => setPosts(r.data));
   }, [tab, activeBrand?.id]);
 
-  const del = async (id: number) => {
-    if (!confirm("Delete this post?")) return;
-    await api.delete(`/posts/${id}`);
-    setPosts(p => p.filter(x => x.id !== id));
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/posts/${pendingDelete.id}`);
+      setPosts(p => p.filter(x => x.id !== pendingDelete.id));
+      setPendingDelete(null);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -80,12 +88,23 @@ export default function Library() {
                 {p.scheduled_at && <span><Icon.Clock size={11} style={{ verticalAlign: "middle" }}/> {new Date(p.scheduled_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>}
                 {p.status === "published" && <span>{p.reach.toLocaleString()} reach · {p.engagement}%</span>}
                 <div style={{ flex: 1 }}/>
-                <Icon.Trash size={14} onClick={() => del(p.id)} style={{ opacity: 0.4, cursor: "pointer" }}/>
+                <Icon.Trash size={14} onClick={() => setPendingDelete(p)} style={{ opacity: 0.4, cursor: "pointer" }}/>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      <ConfirmModal
+        open={!!pendingDelete}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete this post?"
+        body={pendingDelete ? <>This will permanently remove the post{pendingDelete.caption ? <> <i>"{pendingDelete.caption.slice(0, 60)}{pendingDelete.caption.length > 60 ? "…" : ""}"</i></> : ""}. This can't be undone.</> : null}
+        confirmLabel="Delete"
+        danger
+        busy={deleting}
+      />
     </>
   );
 }

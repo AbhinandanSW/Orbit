@@ -1,14 +1,27 @@
 import os
+import sentry_sdk
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from .config import settings
-from .db import Base, engine
+
+if settings.SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        environment=settings.SENTRY_ENV,
+        traces_sample_rate=settings.SENTRY_TRACES_SAMPLE_RATE,
+        send_default_pii=False,
+    )
+from .db import Base, engine, ensure_columns
 from . import models  # noqa: F401 register models
-from .routers import auth_r, brands, posts, metrics, connections, goals, ai
+from . import scheduler as scheduler_mod
+from .routers import auth_r, brands, posts, metrics, connections, goals, ai, media, oauth_linkedin, oauth_meta, oauth_google
 
 Base.metadata.create_all(bind=engine)
+ensure_columns()
+
+os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
 app = FastAPI(title="Orbit API")
 
@@ -33,6 +46,22 @@ app.include_router(metrics.router, prefix="/api")
 app.include_router(connections.router, prefix="/api")
 app.include_router(goals.router, prefix="/api")
 app.include_router(ai.router, prefix="/api")
+app.include_router(media.router, prefix="/api")
+app.include_router(oauth_linkedin.router, prefix="/api")
+app.include_router(oauth_meta.router, prefix="/api")
+app.include_router(oauth_google.router, prefix="/api")
+
+
+@app.on_event("startup")
+def _start_scheduler() -> None:
+    scheduler_mod.start()
+
+
+@app.on_event("shutdown")
+def _stop_scheduler() -> None:
+    scheduler_mod.stop()
+
+app.mount(settings.UPLOAD_PUBLIC_BASE, StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 
 # Serve the built frontend (Vite `npm run build` output) when present.

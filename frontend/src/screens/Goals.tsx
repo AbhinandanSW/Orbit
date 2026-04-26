@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TopBar } from "../lib/shared";
+import { TopBar, ConfirmModal } from "../lib/shared";
 import { Icon } from "../lib/icons";
 import { api, type GoalProgress, type GoalMetric, type GoalStatus } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
@@ -179,10 +179,17 @@ function DetailDrawer({ progress, brandName, brandColor, onClose, onDeleted, onA
   const line = series.length ? `M ${pts.join(" L ")}` : "";
   const fillPath = series.length ? `M ${pad},${height - pad} L ${pts.join(" L ")} L ${pad + (series.length - 1) * step},${height - pad} Z` : "";
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const del = async () => {
-    if (!confirm(`Delete goal "${g.title}"?`)) return;
-    await api.delete(`/goals/${g.id}`);
-    onDeleted();
+    setDeleting(true);
+    try {
+      await api.delete(`/goals/${g.id}`);
+      setConfirmOpen(false);
+      onDeleted();
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -224,7 +231,7 @@ function DetailDrawer({ progress, brandName, brandColor, onClose, onDeleted, onA
             <Icon.Sparkle size={14}/> Ask Orbit to analyze
           </button>
           <div style={{ flex: 1 }}/>
-          <button className="btn" onClick={del} style={{ color: "#FF8DB5" }}><Icon.Trash size={14}/> Delete goal</button>
+          <button className="btn" onClick={() => setConfirmOpen(true)} style={{ color: "#FF8DB5" }}><Icon.Trash size={14}/> Delete goal</button>
         </div>
 
         <div className="hr" style={{ margin: "24px 0" }} />
@@ -232,6 +239,17 @@ function DetailDrawer({ progress, brandName, brandColor, onClose, onDeleted, onA
           Window: {new Date(g.period_start).toLocaleDateString()} → {new Date(g.period_end).toLocaleDateString()}
         </div>
       </div>
+
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={del}
+        title="Delete this goal?"
+        body={<>Delete <b>"{g.title}"</b>? Past progress data will be removed and this can't be undone.</>}
+        confirmLabel="Delete goal"
+        danger
+        busy={deleting}
+      />
     </div>
   );
 }

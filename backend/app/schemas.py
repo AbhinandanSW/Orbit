@@ -74,6 +74,8 @@ class PostOut(BaseModel):
     status: str
     engagement: float
     reach: int
+    external_ids: dict[str, str] = {}
+    last_error: Optional[str] = None
     class Config: from_attributes = True
 
 
@@ -89,7 +91,17 @@ class ConnectionOut(BaseModel):
     platform: str
     handle: str
     connected_at: datetime
+    external_account_id: Optional[str] = None
+    token_expires_at: Optional[datetime] = None
+    status: str = "active"
     class Config: from_attributes = True
+
+
+class MediaOut(BaseModel):
+    url: str
+    filename: str
+    content_type: str
+    size: int
 
 
 class GoalIn(BaseModel):
